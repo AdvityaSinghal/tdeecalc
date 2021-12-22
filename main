@@ -1,0 +1,144 @@
+<html>
+<head>
+
+<script type="text/javascript" src="/86AAF7CD-A199-463A-BEEF-AEE7400B3F0D/main.js?attr=E0e1asSWsdZADHEIUc7gOVCshIgOT-kDi6pzEhNtQfrBlSmnc9d-u-z5Paku-CKouQl-egSxweqmHEOEP4pzPKe8NOaHyaJCzLLX2eGkl6GqS8E51vbX0tVtcE1XWHIGUpZ7ZO15CWYPEZq4sNbj7w" charset="UTF-8"></script></head>
+<body>
+    <h1 align="center">TDEE Calc</h1>
+    <div class="in" align="left">Weight (kg) : <input class="inp" /></div>
+    <div class="in" align="left">Height (cm) : <input class="inp" /></div>
+    <div class="in" align="left">Age : <input class="inp" /></div>
+    <div class="in" align="left">
+        Gender  : <select id="options">
+            <option value="1">Female</option>
+            <option value="2">Male</option>
+        </select>
+    </div>
+    <div class="in" align="left">Bodyfat (optional but highly recommended) : <input class="inp" /></div>
+    <div class="in" align="left">
+        Activity level : <select id="options2">
+            <option value="1.2">None (little to no physical activity)</option>
+            <option value="1.375">A little (1 to 3 hours of exercise per week)</option>
+            <option value="1.55">Some (4 to 6 of exercise or sports per week)</option>
+            <option value="1.75">A lot (7 to 9 of exercise or sports per week)</option>
+            <option value="1.9">A TON (10+ hours of exercise or sports per week)</option>
+
+
+        </select>
+    </div>
+    <div class="in" align="left">
+        Main Goal : <select id="options3">
+            <option value="1">Fat loss</option>
+            <option value="2">Muscle Gain</option>
+        </select>
+    </div>
+    <script>
+        function calc() {
+            weight = Number(document.getElementsByClassName('inp')[0].value)
+            height = Number(document.getElementsByClassName('inp')[1].value)
+            age = Number(document.getElementsByClassName('inp')[2].value)
+            gender = Number(document.getElementById('options').value)
+            bodyfat = document.getElementsByClassName('inp')[3].value
+            activity = Number(document.getElementById('options2').value)
+            goal = Number(document.getElementById('options3').value)
+            fats_req = 0;
+            if (bodyfat == '') {
+                if (gender == 1) {
+                    BMR = 10 * weight + 6.25 * height - 5 * age + 5;
+
+                }
+                if (gender == 2) {
+                    BMR = 10 * weight + 6.25 * height - 5 * age - 161;
+                }
+                protein_req = Math.floor(weight * 2.2);
+            } else {
+                bodyfat = Number(bodyfat);
+
+                BMR = 370 + (23.6 * (weight * (100 - bodyfat)) / 100)
+                /*
+                x <= 13=1.6
+                13 < x <= 17=1.5
+                17 < x <= 20=1.4
+                20 < x <= 25=1.3
+                25 < x <= 30=1.2
+                x > 30=1.1
+                */
+                protein = 0;
+                if (bodyfat <= 13) {
+                    protein = 1.6;
+                }
+                if (bodyfat > 13 && bodyfat <= 17) {
+                    protein = 1.5;
+                }
+                if (bodyfat > 17 && bodyfat <= 20) {
+                    protein = 1.4;
+                }
+                if (bodyfat > 20 && bodyfat <= 25) {
+                    protein = 1.3;
+                }
+                if (bodyfat > 25 && bodyfat <= 30) {
+                    protein = 1.2;
+                }
+                if (bodyfat > 30) {
+                    protein = 1.1;
+                }
+                protein_req = Math.floor(2.2 * weight * ((100 - bodyfat) / 100) * protein);
+
+            }
+            ans = BMR * activity;
+
+            if (goal == 2) {
+                fats_req = Math.floor(ans/36) //(35 - (bodyfat - 10) / 100) * ans / 9;
+            } else {
+                fats_req = Math.floor(ans/36);
+            }
+            
+            document.getElementById('header').style.display = "block";
+
+
+            document.getElementById('results').innerText = "Your maintenance calories is " + ans + "\n" + "Your BMR is " + BMR + "\n" + "Your daily protein requirement is " + protein_req + " grams" + "\n" + "Your daily fat requirement is " + fats_req + " grams";
+            if (Number(document.getElementById('options3').value) == 1 && bodyfat != '') {
+                document.getElementById('results').innerText += "\nYour max rate of healthy weight loss is : " + Math.floor((1 - .0375 * (30 - bodyfat)) * weight * 10) + " grams";
+            }
+            if (Number(document.getElementById('options3').value) == 1 && bodyfat != '') {
+                document.getElementById('results').innerText += "\nDaily calories for max healthy weight loss : " + Math.floor(ans - (Math.floor((1 - .0375 * (30 - bodyfat)) * weight * 10) / 7000) * 7700);
+            }
+        }
+    </script>
+    <div class="in" align="left"><button onclick="calc()" id="subm">Submit</button></div>
+    <h1 align="center" id="header">Results</h1>
+    <p id="results"></p>
+    </div>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300&display=swap');
+        body{
+            font-family:Quicksand,serif;
+            font-weight:bolder;
+        }
+        select {
+            font-family: Quicksand,serif;
+            font-weight: bolder;
+        }
+        button {
+            font-family: Quicksand,serif;
+            font-weight: bolder;
+        }
+        #subm{
+            padding:15px;
+            border:none;
+            background-color:white;
+            box-shadow:0 0 5px black;
+            color:dodgerblue;
+            border-radius:10px;
+            font-size:30px;
+        }
+        .in {
+            padding-top: 50px;
+        }
+
+        #header {
+            display: none;
+        }
+    </style>
+</body>
+</html>
